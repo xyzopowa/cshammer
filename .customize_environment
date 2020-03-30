@@ -1,6 +1,8 @@
 # pre-commit-terraform https://github.com/antonbabenko/pre-commit-terraform
-sudo apt install gawk &&\
+sudo apt install gawk
+pip install --upgrade pip
 pip3 install pre-commit
+
 curl -L "$(curl -s https://api.github.com/repos/segmentio/terraform-docs/releases/latest | grep -o -E "https://.+?-linux-amd64")" > terraform-docs && chmod +x terraform-docs && sudo mv terraform-docs /usr/local/bin/
 curl -L "$(curl -s https://api.github.com/repos/terraform-linters/tflint/releases/latest | grep -o -E "https://.+?_linux_amd64.zip")" > tflint.zip && unzip tflint.zip && rm tflint.zip && sudo mv tflint /usr/local/bin/
 
@@ -9,6 +11,7 @@ terraform_url=$(curl https://releases.hashicorp.com/index.json | jq '{terraform}
 curl -L "${terraform_url}" > terraform.zip && unzip terraform.zip && rm terraform.zip && sudo mv terraform /usr/local/bin/
 
 # kubectl *krew*
+sudo -u xyzopowa -i  <<'EOF'
 (
   set -x; cd "$(mktemp -d)" &&
   curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.{tar.gz,yaml}" &&
@@ -23,19 +26,21 @@ kubectl krew install rbac-lookup
 kubectl krew install tail
 kubectl krew install tree
 kubectl krew install view-secret
+EOF
 
 # helm3
 latest_release_url="https://github.com/helm/helm/releases"
 TAG=$(curl -Ls $latest_release_url | grep 'href="/helm/helm/releases/tag/v3.' | grep -v no-underline | head -n 1 | cut -d '"' -f 2 | awk '{n=split($NF,a,"/");print a[n]}' | awk 'a !~ $0{print}; {a=$0}')
+HELM_DIST="helm-$TAG-linux-amd64.tar.gz"
 HELM_TMP_ROOT="$(mktemp -dt helm-installer-XXXXXX)"
 HELM_TMP_FILE="$HELM_TMP_ROOT/$HELM_DIST"
-HELM_DIST="helm-$TAG-linux-amd64.tar.gz"
 DOWNLOAD_URL="https://get.helm.sh/$HELM_DIST"
 
 curl -SsL "$DOWNLOAD_URL" -o "$HELM_TMP_FILE"
 cd $HELM_TMP_ROOT
 tar -zxvf $HELM_DIST
-sudo mv helm /usr/local/bin/helm3
+sudo mv linux-amd64/helm /usr/local/bin/helm3
 cd
 
-
+# velero
+curl -L "$(curl -s https://api.github.com/repos/vmware-tanzu/velero/releases/latest | grep -o -E "https://.+?-linux-amd64.tar.gz")" > velero.tar.gz && tar -zxvf velero.tar.gz && sudo mv velero-*-amd64/velero /usr/local/bin/
