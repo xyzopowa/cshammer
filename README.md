@@ -1,29 +1,32 @@
-#first step
+Sample cloud shell pre-configuration
+
+# Principe
+Cloud Shell automatically runs the script, $HOME/.customize_environment, when your instance boots up. Unlike .profile or .bashrc, this script runs once when Cloud Shell boots (rather than once for each shell login).
+
+your home is a persitent 5Go volume .  the purpose of this repo is to install system requirement which are outside your home/ or to be able to generate a, initial cloudshell env with ease
+
+# How
+simply copy this files in your cloudshell home and adapt them :
+
+(to launch a cloudshell with a git repo and an editor: )
 
 https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/xyzopowa/cshammer&page=editor&open_in_editor=README.md
 
-#second step
-Environment customization script
-
-Cloud Shell automatically runs the script, $HOME/.customize_environment, when your instance boots up. Unlike .profile or .bashrc, this script runs once when Cloud Shell boots (rather than once for each shell login).
-
-This script runs as root and you can install any packages that you want to exist in each Cloud Shell session using Debian package management commands.
-
-For example, if you'd like to have erlang installed on Cloud Shell, your .customize_environment file will look like this:
 ```shell
-#!/bin/sh
-apt-get update
-apt-get -y install erlang
-``` 
-Execution logs of your .customize_environment script can be found at /var/log/customize_environment. The .customize_environment script runs as a background process and on successful execution, will touch /google/devshell/customize_environment_done. Because package installation runs in parallel with your logging in, the installed packages may become available a few moments after you reach the login prompt.
-
-#
-
-
-# files
-
-```shell
-.gitconfig              # git profile
+.gitconfig              # git profile 
 .profile                # env 
 .customize_environment  # customize env
 ```
+
+# Content
+- update terraform
+- add terraform-docs
+- add tflint
+- add pre-commit
+- add kubect-krew
+- add kubectl krew plugins :  rbac-lookup , tail , tree and view-secret
+- add helm v3 as 'helm3'
+- add velero 
+
+# nota
+
