@@ -24,3 +24,18 @@ kubectl krew install tail
 kubectl krew install tree
 kubectl krew install view-secret
 
+# helm3
+latest_release_url="https://github.com/helm/helm/releases"
+TAG=$(curl -Ls $latest_release_url | grep 'href="/helm/helm/releases/tag/v3.' | grep -v no-underline | head -n 1 | cut -d '"' -f 2 | awk '{n=split($NF,a,"/");print a[n]}' | awk 'a !~ $0{print}; {a=$0}')
+HELM_TMP_ROOT="$(mktemp -dt helm-installer-XXXXXX)"
+HELM_TMP_FILE="$HELM_TMP_ROOT/$HELM_DIST"
+HELM_DIST="helm-$TAG-linux-amd64.tar.gz"
+DOWNLOAD_URL="https://get.helm.sh/$HELM_DIST"
+
+curl -SsL "$DOWNLOAD_URL" -o "$HELM_TMP_FILE"
+cd $HELM_TMP_ROOT
+tar -zxvf $HELM_DIST
+sudo mv helm /usr/local/bin/helm3
+cd
+
+
