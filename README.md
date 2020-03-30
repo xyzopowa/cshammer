@@ -23,6 +23,7 @@ Execution logs of your .customize_environment script can be found at /var/log/cu
 # files
 
 ```shell
-.gitconfig   # git profile
-
+.gitconfig              # git profile
+.profile                # env 
+.customize_environment  # customize env
 ```

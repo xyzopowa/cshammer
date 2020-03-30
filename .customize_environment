@@ -1,0 +1,26 @@
+# pre-commit-terraform https://github.com/antonbabenko/pre-commit-terraform
+sudo apt install gawk &&\
+pip3 install pre-commit
+curl -L "$(curl -s https://api.github.com/repos/segmentio/terraform-docs/releases/latest | grep -o -E "https://.+?-linux-amd64")" > terraform-docs && chmod +x terraform-docs && sudo mv terraform-docs /usr/local/bin/
+curl -L "$(curl -s https://api.github.com/repos/terraform-linters/tflint/releases/latest | grep -o -E "https://.+?_linux_amd64.zip")" > tflint.zip && unzip tflint.zip && rm tflint.zip && sudo mv tflint /usr/local/bin/
+
+# update terraform
+terraform_url=$(curl https://releases.hashicorp.com/index.json | jq '{terraform}' | egrep "linux.*amd64" | sort --version-sort -r | head -1 | awk -F[\"] '{print $4}')
+curl -L "${terraform_url}" > terraform.zip && unzip terraform.zip && rm terraform.zip && sudo mv terraform /usr/local/bin/
+
+# kubectl *krew*
+(
+  set -x; cd "$(mktemp -d)" &&
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.{tar.gz,yaml}" &&
+  tar zxvf krew.tar.gz &&
+  KREW=./krew-"$(uname | tr '[:upper:]' '[:lower:]')_amd64" &&
+  "$KREW" install --manifest=krew.yaml --archive=krew.tar.gz &&
+  "$KREW" update
+)
+
+# rbac lookup - tail - tree - view-secret
+kubectl krew install rbac-lookup
+kubectl krew install tail
+kubectl krew install tree
+kubectl krew install view-secret
+
